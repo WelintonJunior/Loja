@@ -5,15 +5,21 @@ export const LojaContext = createContext({
   tela: 0,
   handleAddProduto: () => {},
   handleAddFuncionario: () => {},
+  handleClearForm: () => {}
 });
 
 function produtosReducer(state, action) {
+  const item = action.payload.item;
+  const quantidade = action.payload.quantidade;
+  const und = action.payload.und;
+
+  if (item === "" || quantidade === "" || und === "") {
+    alert("Não é permitido campos vazios!");
+    return;
+  }
+
   if (action.type === "ADD_PRODUTO") {
-    CadastrarProduto(
-      action.payload.item,
-      action.payload.quantidade,
-      action.payload.und
-    );
+    CadastrarProduto(item, quantidade, und);
   }
 }
 
