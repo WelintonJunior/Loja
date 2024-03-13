@@ -29,3 +29,40 @@ header {
 .header-title {
   flex: 1;
 }
+
+.Form {
+  padding: 10px;
+  width: 300px;
+  height: 200px;
+  background-color: #f5725f;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin: 20px;
+  box-shadow: 0.1em 0.1em 1em black;
+}
+
+button {
+  width: 80px;
+  height: 40px;
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+  cursor: pointer;
+  border-radius: 10px;
+  float: inline-end;
+}
+
+button:hover {
+  background-color: #f5725f;
+  color: black;
+  transition: 1s;
+}
+
+.buttonBox {
+  width: 100%;
+  display: flex;
+  height: 40%;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}

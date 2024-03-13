@@ -5,21 +5,35 @@ export const LojaContext = createContext({
   tela: 0,
   handleAddProduto: () => {},
   handleAddFuncionario: () => {},
+  handleClearForm: () => {},
 });
 
 function produtosReducer(state, action) {
+  const item = action.payload.item;
+  const quantidade = action.payload.quantidade;
+  const und = action.payload.und;
+
+  if (item === "" || quantidade === "" || und === "") {
+    alert("Não é permitido campos vazios!");
+    return;
+  }
+
   if (action.type === "ADD_PRODUTO") {
-    CadastrarProduto(
-      action.payload.item,
-      action.payload.quantidade,
-      action.payload.und
-    );
+    CadastrarProduto(item, quantidade, und);
   }
 }
 
 function funcionariosReducer(state, action) {
+  const nome = action.payload.nome;
+  const nascimento = action.payload.nascimento;
+
+  if (nome === "" || nascimento === "") {
+    alert("Não é permitido campos vazios!");
+    return;
+  }
+
   if (action.type === "ADD_FUNCIONARIO") {
-    CadastrarFuncionario(action.payload.nome, action.payload.nascimento);
+    CadastrarFuncionario(nome, nascimento);
   }
 }
 
@@ -44,7 +58,7 @@ export default function LojaContextProvider({ children }) {
     });
   }
 
-  function handleAddFuncionario() {
+  function handleAddFuncionario(nome, nascimento) {
     funcionariosDispatch({
       type: "ADD_FUNCIONARIO",
       payload: {
