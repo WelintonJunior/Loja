@@ -1,5 +1,3 @@
-// LojaContext.jsx
-
 import React, { createContext, useReducer, useEffect } from "react";
 import {
   CadastrarProduto,
@@ -25,8 +23,10 @@ function produtosReducer(state, action) {
         alert("Não é permitido campos vazios!");
         return state;
       }
+      // Cadastrar o produto
       CadastrarProduto(item, quantidade, und);
-      return state;
+      // Retornar uma nova lista de produtos atualizada
+      return { ...state, produtos: [...state.produtos, payload] };
     }
     case "SET_PRODUTOS": {
       return { ...state, produtos: payload };
@@ -73,14 +73,10 @@ export default function LojaContextProvider({ children }) {
 
   // FUNÇÃO PARA ADICIONAR PRODUTO
   function handleAddProduto(item, quantidade, und) {
-    produtosDispatch({
-      type: "ADD_PRODUTO",
-      payload: {
-        item,
-        quantidade,
-        und,
-      },
-    });
+    CadastrarProduto(item, quantidade, und);
+    setTimeout(() => {
+      handlePesquisarProduto();
+    }, 100);
   }
 
   // FUNÇÃO PARA PESQUISAR PRODUTO

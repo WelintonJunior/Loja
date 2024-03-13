@@ -5,12 +5,20 @@ import AddFuncionario from "./component/AddFuncionario";
 import ListProdutos from "./component/ListProdutos";
 function App() {
   return (
-    <LojaContextProvider>
+    <>
       <Header />
-      <AddProduto />
-      <AddFuncionario />
-      <ListProdutos />
-    </LojaContextProvider>
+      <div className="d-flex">
+        <LojaContextProvider>
+          <div className="um">
+            <AddProduto />
+            <AddFuncionario />
+          </div>
+          <div className="dois">
+            <ListProdutos />
+          </div>
+        </LojaContextProvider>
+      </div>
+    </>
   );
 }
 
