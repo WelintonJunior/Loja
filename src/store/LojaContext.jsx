@@ -5,7 +5,7 @@ export const LojaContext = createContext({
   tela: 0,
   handleAddProduto: () => {},
   handleAddFuncionario: () => {},
-  handleClearForm: () => {}
+  handleClearForm: () => {},
 });
 
 function produtosReducer(state, action) {
@@ -24,8 +24,16 @@ function produtosReducer(state, action) {
 }
 
 function funcionariosReducer(state, action) {
+  const nome = action.payload.nome;
+  const nascimento = action.payload.nascimento;
+
+  if (nome === "" || nascimento === "") {
+    alert("Não é permitido campos vazios!");
+    return;
+  }
+
   if (action.type === "ADD_FUNCIONARIO") {
-    CadastrarFuncionario(action.payload.nome, action.payload.nascimento);
+    CadastrarFuncionario(nome, nascimento);
   }
 }
 
@@ -50,7 +58,7 @@ export default function LojaContextProvider({ children }) {
     });
   }
 
-  function handleAddFuncionario() {
+  function handleAddFuncionario(nome, nascimento) {
     funcionariosDispatch({
       type: "ADD_FUNCIONARIO",
       payload: {
