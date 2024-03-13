@@ -1,52 +1,77 @@
-import { createContext, useReducer } from "react";
-import { CadastrarProduto, CadastrarFuncionario } from "../requests/requests";
+// LojaContext.jsx
+
+import React, { createContext, useReducer, useEffect } from "react";
+import {
+  CadastrarProduto,
+  CadastrarFuncionario,
+  SearchProduto,
+} from "../requests/requests";
 
 export const LojaContext = createContext({
   tela: 0,
   handleAddProduto: () => {},
   handleAddFuncionario: () => {},
   handleClearForm: () => {},
+  handlePesquisarProduto: () => {},
 });
 
+// REDUCER DOS PRODUTOS
 function produtosReducer(state, action) {
-  const item = action.payload.item;
-  const quantidade = action.payload.quantidade;
-  const und = action.payload.und;
-
-  if (item === "" || quantidade === "" || und === "") {
-    alert("Não é permitido campos vazios!");
-    return;
-  }
-
-  if (action.type === "ADD_PRODUTO") {
-    CadastrarProduto(item, quantidade, und);
+  const { type, payload } = action;
+  switch (type) {
+    case "ADD_PRODUTO": {
+      const { item, quantidade, und } = payload;
+      if (item === "" || quantidade === "" || und === "") {
+        alert("Não é permitido campos vazios!");
+        return state;
+      }
+      CadastrarProduto(item, quantidade, und);
+      return state;
+    }
+    case "SET_PRODUTOS": {
+      return { ...state, produtos: payload };
+    }
+    default:
+      return state;
   }
 }
 
+// REDUCER DOS FUNCIONÁRIOS
 function funcionariosReducer(state, action) {
-  const nome = action.payload.nome;
-  const nascimento = action.payload.nascimento;
-
-  if (nome === "" || nascimento === "") {
-    alert("Não é permitido campos vazios!");
-    return;
-  }
-
-  if (action.type === "ADD_FUNCIONARIO") {
-    CadastrarFuncionario(nome, nascimento);
+  const { type, payload } = action;
+  const { nome, nascimento } = payload;
+  switch (type) {
+    case "ADD_FUNCIONARIO": {
+      if (nome === "" || nascimento === "") {
+        alert("Não é permitido campos vazios!");
+        return state;
+      }
+      CadastrarFuncionario(nome, nascimento);
+      return state;
+    }
+    default:
+      return state;
   }
 }
 
 export default function LojaContextProvider({ children }) {
+  // LÓGICA DOS PRODUTOS
   const [produtosState, produtosDispatch] = useReducer(produtosReducer, {
     produtos: [],
   });
 
+  // LÓGICA DOS FUNCIONÁRIOS
   const [funcionariosState, funcionariosDispatch] = useReducer(
     funcionariosReducer,
     { funcionarios: [] }
   );
 
+  // EFEITO PARA PESQUISAR PRODUTOS QUANDO O COMPONENTE MONTAR
+  useEffect(() => {
+    handlePesquisarProduto();
+  }, []);
+
+  // FUNÇÃO PARA ADICIONAR PRODUTO
   function handleAddProduto(item, quantidade, und) {
     produtosDispatch({
       type: "ADD_PRODUTO",
@@ -58,6 +83,21 @@ export default function LojaContextProvider({ children }) {
     });
   }
 
+  // FUNÇÃO PARA PESQUISAR PRODUTO
+  function handlePesquisarProduto() {
+    SearchProduto()
+      .then((dados) => {
+        produtosDispatch({
+          type: "SET_PRODUTOS",
+          payload: dados,
+        });
+      })
+      .catch((error) => {
+        console.error("Erro ao pesquisar produtos:", error);
+      });
+  }
+
+  // FUNÇÃO PARA ADICIONAR FUNCIONÁRIO
   function handleAddFuncionario(nome, nascimento) {
     funcionariosDispatch({
       type: "ADD_FUNCIONARIO",
@@ -68,10 +108,14 @@ export default function LojaContextProvider({ children }) {
     });
   }
 
+  // CONTEXT VALUE
   const lojaCtx = {
     tela: 0,
-    handleAddProduto: handleAddProduto,
-    handleAddFuncionario: handleAddFuncionario,
+    handleAddProduto,
+    handleAddFuncionario,
+    handlePesquisarProduto,
+    funcionariosState,
+    produtosState,
   };
 
   return (

@@ -2,7 +2,8 @@ import { LojaContext } from "../store/LojaContext";
 import { useContext, useRef } from "react";
 
 export default function AddFuncionario() {
-  const { handleAddFuncionario } = useContext(LojaContext);
+  const { handleAddFuncionario } =
+    useContext(LojaContext);
   const nome = useRef();
   const nasc = useRef();
 
