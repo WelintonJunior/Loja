@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react";
+import { CadastrarProduto, CadastrarFuncionario } from "../requests/requests";
 
 export const LojaContext = createContext({
   tela: 0,
@@ -8,7 +9,11 @@ export const LojaContext = createContext({
 
 function produtosReducer(state, action) {
   if (action.type === "ADD_PRODUTO") {
-    CadastrarProduto(action.payload.item, action.payload.quantidade);
+    CadastrarProduto(
+      action.payload.item,
+      action.payload.quantidade,
+      action.payload.und
+    );
   }
 }
 
@@ -18,7 +23,7 @@ function funcionariosReducer(state, action) {
   }
 }
 
-export default function LojaContextProvider({children}) {
+export default function LojaContextProvider({ children }) {
   const [produtosState, produtosDispatch] = useReducer(produtosReducer, {
     produtos: [],
   });
@@ -28,12 +33,13 @@ export default function LojaContextProvider({children}) {
     { funcionarios: [] }
   );
 
-  function handleAddProduto(item, quantidade) {
+  function handleAddProduto(item, quantidade, und) {
     produtosDispatch({
       type: "ADD_PRODUTO",
       payload: {
         item,
         quantidade,
+        und,
       },
     });
   }
